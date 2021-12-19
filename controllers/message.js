@@ -18,7 +18,7 @@ exports.send = (req, res, next) => {
         if(!message.toid){
             connection.query('select id from users where username = ?', [message.tousername],
             (error, rows) => {
-                message.toid = rows[0].id
+                message.toid = rows[0]?.id
                 connection.query('insert into message(id, toid, fromid, msg, sendtime) values (?, ?, ?, ?, ?)',
                 [message.id, message.toid, message.fromid, message.msg, message.sendtime],
                 (error, rows) => {
@@ -54,10 +54,10 @@ exports.getAllMessages = (req, res, next) => {
     try{
         const query = {
             fromid: req.body.id,
-            toid: req.body.toid
+            toid: req.params.toid
         }
 
-        connection.query('select * from message where fromid = ? or toid = ? and toid = ? or fromid = ? order by sendtime desc', 
+        connection.query('select * from message where fromid = ? and toid = ? or toid = ? and fromid = ? order by sendtime desc', 
         [query.fromid, query.toid, query.fromid, query.toid],
         (error, rows) => {
             if(!error){

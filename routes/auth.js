@@ -10,8 +10,8 @@ router
   .route('/login')
   .post(login)
 
-// router
-//   .route('/')
-//   .get(helloworld)
+router
+  .route('/')
+  .get(helloworld)
 
 module.exports = router;

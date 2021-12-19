@@ -5,7 +5,7 @@ const { isLoggedIn } = require('../middleware/authenticate')
 
 router.post('/specific', isLoggedIn, send)
 
-router.get('/specific', isLoggedIn, getAllMessages)
+router.get('/specific/:toid', isLoggedIn, getAllMessages)
 
 router.get('/getallusers', isLoggedIn, getAllUsers)
 

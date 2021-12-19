@@ -82,9 +82,9 @@ exports.login = (req, res, next) => {
     }
 }
 
-// exports.helloworld = (req, res, next) => {
-//     return res.status(200).json({
-//         success:true,
-//         message:"helloworld"
-//     })
-// }
+exports.helloworld = (req, res, next) => {
+    return res.status(200).json({
+        success:true,
+        message:"helloworld"
+    })
+}
