@@ -82,13 +82,13 @@ exports.getAllUsers = (req, res, next) => {
             id: req.body.id,
         }
 
-        connection.query('select distinct users.id, fullname, username from users join message on users.id=message.toid where message.fromid = ?', 
-        [query.id],
+        connection.query('select distinct users.id, fullname, username from users join message on users.id=message.toid or users.id=message.fromid where message.fromid = ? or message.toid = ?', 
+        [query.id, query.id],
         (error, rows) => {
             if(!error){
                 return res.status(200).json({
                     success: true,
-                    message: rows.length + " users .",
+                    message: rows.length + " users.",
                     data: rows
                 })
             }
@@ -105,18 +105,26 @@ exports.getLastMessages = (req, res, next) => {
     try{
         const query = {
             id: req.body.id,
-            toid: req.body.toid,
-            cursor: req.body.cursor
+            toid: req.params.toid,
+            cursor: req.params.cursor
         }
 
-        connection.query('select id, msg, sendtime from message where fromid = ? and toid = ? order by sendtime desc', 
-        [query.id, query.toid],
+        connection.query('select * from message where fromid = ? and toid = ? or toid = ? and fromid = ? order by sendtime', 
+        [query.id, query.toid, query.id, query.toid],
         (error, rows) => {
             if(!error){
+                if(query.cursor == 0){
+                    return res.status(200).json({
+                        success: true,
+                        message: rows.length + " last messages",
+                        data: rows
+                    })
+                }
+
                 let lastmsgs = []
                 const lastmsgindex = rows.map(item => item.id).indexOf(query.cursor)
 
-                for(let i = 0 ; i< lastmsgindex ; i++)
+                for(let i = 0 ; i < lastmsgindex ; i++)
                 {
                     lastmsgs.push(rows[i])
                 }

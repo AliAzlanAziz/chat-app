@@ -9,6 +9,6 @@ router.get('/specific/:toid', isLoggedIn, getAllMessages)
 
 router.get('/getallusers', isLoggedIn, getAllUsers)
 
-router.get('/getlastmessages', isLoggedIn, getLastMessages)
+router.get('/getlastmessages/:toid/:cursor', isLoggedIn, getLastMessages)
 
 module.exports = router;
