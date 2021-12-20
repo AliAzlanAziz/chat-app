@@ -82,7 +82,7 @@ exports.getAllUsers = (req, res, next) => {
             id: req.body.id,
         }
 
-        connection.query('select distinct users.id, fullname, username from users join message on users.id=message.toid or users.id=message.fromid where message.fromid = ? or message.toid = ?', 
+        connection.query('select distinct users.id, username, fullname from users, message where (users.id = message.fromid and message.toid = ?) or (users.id = message.toid and message.fromid = ?)', 
         [query.id, query.id],
         (error, rows) => {
             if(!error){
