@@ -18,6 +18,12 @@ exports.send = (req, res, next) => {
         if(!message.toid){
             connection.query('select id from users where username = ?', [message.tousername],
             (error, rows) => {
+                if(error){
+                    return res.status(403).json({
+                        success: false,
+                        message: 'message not sent'
+                    })
+                }
                 message.toid = rows[0]?.id
                 connection.query('insert into message(id, toid, fromid, msg, sendtime) values (?, ?, ?, ?, ?)',
                 [message.id, message.toid, message.fromid, message.msg, message.sendtime],
